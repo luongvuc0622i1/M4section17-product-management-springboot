@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -24,13 +23,6 @@ public class ProductController {
         modelAndView.addObject("products", productService.findAll());
         return modelAndView;
     }
-
-//    @GetMapping("")
-//    public String showList(Model model) {
-//        Iterable<Product> productList = productService.findAll();
-//        model.addAttribute("products", productList);
-//        return "/product/list";
-//    }
 
     @GetMapping("/create")
     public ModelAndView showCreateForm() {
@@ -84,9 +76,9 @@ public class ProductController {
 
 
     @PostMapping("/delete")
-    public String deleteCustomer(@ModelAttribute("product") Product product) {
+    public String deleteCustomer(@ModelAttribute("product") Product product, RedirectAttributes redirect) {
         productService.remove(product.getId());
-//        redirect.addFlashAttribute("success", "Removed product successfully!");
+        redirect.addFlashAttribute("success", "Removed product successfully!");
         return "redirect:/products";
     }
 
@@ -98,10 +90,10 @@ public class ProductController {
         return modelAndView;
     }
 
-//    @GetMapping("/search")
-//    public String searchProduct(@RequestParam String name, Model model) {
-//        List<Product> productList = productService.findByName(name);
-//        model.addAttribute("products", productList);
-//        return "/list";
-//    }
+    @GetMapping("/search")
+    public ModelAndView searchProduct(@RequestParam String name) {
+        ModelAndView modelAndView = new ModelAndView("/product/list");
+        modelAndView.addObject("products", productService.findAllByName(name));
+        return modelAndView;
+    }
 }
